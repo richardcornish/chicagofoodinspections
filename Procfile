@@ -1,0 +1,1 @@
+web: gunicorn chicagofoodinspections.wsgi --pythonpath chicagofoodinspections --log-file -

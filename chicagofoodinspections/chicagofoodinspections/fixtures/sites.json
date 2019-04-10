@@ -1,0 +1,26 @@
+[
+    {
+        "pk": 1, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "127.0.0.1:8000",
+            "name": "Chicago Food Inspections"
+        }
+    },
+    {
+        "pk": 2, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "chicagofoodinspections.herokuapp.com",
+            "name": "Chicago Food Inspections"
+        }
+    },
+    {
+        "pk": 3, 
+        "model": "sites.site", 
+        "fields": {
+            "domain": "chicagofoodinspections.org",
+            "name": "Chicago Food Inspections"
+        }
+    }
+]

@@ -222,7 +222,3 @@ if DEBUG:
 else:
 
     DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
-
-    GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH', '/usr/local/lib/libgeos_c.so')
-
-    GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH', '/usr/local/lib/libgdal.so')

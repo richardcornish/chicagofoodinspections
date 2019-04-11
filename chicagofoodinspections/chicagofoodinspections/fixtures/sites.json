@@ -11,7 +11,7 @@
         "pk": 2, 
         "model": "sites.site", 
         "fields": {
-            "domain": "chicagofoodinspections.herokuapp.com",
+            "domain": "chicagofoodinspection.herokuapp.com",
             "name": "Chicago Food Inspections"
         }
     },

@@ -19,7 +19,7 @@
         "pk": 3, 
         "model": "sites.site", 
         "fields": {
-            "domain": "chicagofoodinspections.org",
+            "domain": "www.chicagofoodinspections.org",
             "name": "Chicago Food Inspections"
         }
     }

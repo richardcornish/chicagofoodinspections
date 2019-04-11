@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.cache.UpdateCacheMiddleware',  # must be first
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -50,6 +51,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.contrib.sites.middleware.CurrentSiteMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',  # must be last
 ]
 
 ROOT_URLCONF = 'chicagofoodinspections.urls'
@@ -157,6 +159,49 @@ DEFAULT_FROM_EMAIL = 'rich@richardcornish.com'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
+# Caching
+# https://docs.djangoproject.com/en/2.2/topics/cache/
+
+CACHE_MIDDLEWARE_ALIAS = 'default'
+
+CACHE_MIDDLEWARE_SECONDS = 604800
+
+CACHE_MIDDLEWARE_KEY_PREFIX = ''
+
+if DEBUG:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'
+        }
+    }
+else:
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+            'TIMEOUT': None,
+            'LOCATION': os.environ.get('MEMCACHIER_SERVERS', ''),
+            'OPTIONS': {
+                'binary': True,
+                'username': os.environ.get('MEMCACHIER_USERNAME', ''),
+                'password': os.environ.get('MEMCACHIER_PASSWORD', ''),
+                'behaviors': {
+                    'no_block': True,
+                    'tcp_nodelay': True,
+                    'tcp_keepalive': True,
+                    'connect_timeout': 2000,  # ms
+                    'send_timeout': 750 * 1000,  # us
+                    'receive_timeout': 750 * 1000,  # us
+                    '_poll_timeout': 2000,  # ms
+                    'ketama': True,
+                    'remove_failed': 1,
+                    'retry_timeout': 2,
+                    'dead_timeout': 30,
+                }
+            }
+        }
+    }
+
+
 # Heroku
 # https://devcenter.heroku.com/articles/django-app-configuration
 
@@ -172,12 +217,12 @@ if DEBUG:
 
     DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.spatialite'
 
-    SPATIALITE_LIBRARY_PATH = '/usr/local/lib/mod_spatialite.dylib'
+    SPATIALITE_LIBRARY_PATH = '/usr/local/lib/mod_spatialite.so'
 
 else:
 
     DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
 
-    GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH', '')
+    GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH', '/usr/local/lib/libgeos_c.so')
 
-    GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH', '')
+    GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH', '/usr/local/lib/libgdal.so')
